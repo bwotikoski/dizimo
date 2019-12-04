@@ -47,14 +47,25 @@ class PagamentosController extends Controller
     }
 
 public function autoComplete(Request $request) {
+    if ($request->has('search_diz')) {
         $query = $request->get('search_diz','');
-
-        $pagamentos=Pagamento::where('coddizimista',$query)->orderBy('AnoReferencia','desc')->orderBy('MesReferencia','desc')->take(1)->get();
+       $pagamentos=Pagamento::where('coddizimista',$query)->orderBy('AnoReferencia','desc')->orderBy('MesReferencia','desc')->take(1)->get();
 
         $data=array();
         foreach($pagamentos as $pagamento){
             $data[]=array('valor'=>$pagamento->Valor,'mes'=>$pagamento->MesReferencia,'ano'=>$pagamento->AnoReferencia);
         }
+    }
+
+    if ($request->has('numDiz')) {
+        $query = $request->get('numDiz','');
+       $dizimistas=Dizimista::where('Numero',$query)->take(1)->get();
+
+        $data=array();
+        foreach($dizimistas as $dizimista){
+            $data[]=array('coddizimista'=>$dizimista->coddizimista);
+        }
+    }
         if(count($data))
              return $data;
         else
@@ -101,7 +112,7 @@ public function autoComplete(Request $request) {
         $pagamento->AnoReferencia = $request->AnoReferencia;
 
         $pagamento->save();
-            return redirect()->route('pagamentos.pagamento.index')
+            return redirect()->route('pagamentos.pagamento.create')
                 ->with('success_message', 'Pagamento was successfully added.');
         } catch (Exception $exception) {
 

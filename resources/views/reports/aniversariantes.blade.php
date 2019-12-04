@@ -70,12 +70,23 @@
     box-shadow: inset 0 1px 1px rgba(0,0,0,.075);
     transition: border-color .15s ease-in-out,box-shadow .15s ease-in-out;
 }
+#semana{
+    background-color: rgb(77, 43, 10) !important;
+    color:white;
+    font-weight:bold;
+}
     @media print {
         .form-control, .form-group-btn, .btn-primary, .panel-footer {
             display:none;
         }
         tr:nth-child(even) td {
             background-color: #f9f9f9 !important;
+            -webkit-print-color-adjust: exact;
+        }
+        #semana{
+            background-color: rgb(77, 43, 10) !important;
+            color:white !important;
+            font-weight:bold !important;
             -webkit-print-color-adjust: exact;
         }
     }
@@ -95,21 +106,12 @@
             <div class="pull-left p1">
                 <h4 >Dizimistas</h4>
             </div>
-            <form action="/dizimistas/relatorioDizimista" method="get" style="margin-top: 5px;">
-                <div class="col-md-2" style="float:left;">
-
-                        <div class="form-group">
-                            <input type="search" name="search_nome" placeholder="Nome" class="form-control" style="float:left;width: auto;">
-                            <span class="form-group-btn" >
-                            </span>
-                        </div>
-
-                </div>
+            <form action="/dizimistas/relatorioAniversariante" method="get" style="margin-top: 5px;">
 
                 <div class="col-md-1" style="float:left;">
 
                         <div class="form-group">
-                            <input type="search" name="search_num" placeholder="N°" class="form-control" style="float:left;width: 80px;">
+                            <input type="search" name="search_mes_ini" placeholder="Mês Início" class="form-control" style="float:left;width: 100px;">
                             <span class="form-group-btn">
                             </span>
                         </div>
@@ -119,22 +121,11 @@
                 <div class="col-md-2" style="float:left;">
 
                         <div class="form-group">
-                            <input type="date" name="search_dt_nasc" placeholder="Dt. Nascimento" class="form-control" style="float:left;width: auto;">
+                            <input type="search" name="search_mes_fim" placeholder="Mês Fim" class="form-control" style="float:left;width: 100px;">
                             <span class="form-group-btn">
                             </span>
                         </div>
 
-                </div>
-
-
-                <div class="col-md-2" style="float:left; margin-top:5px;color:white;font-weight:bold !important;">
-                    <input type="checkbox" id="search_ativo"
-                    name="search_ativo" value="1">
-                    <label for="search_ativo">Ativo</label>
-
-                    <input type="checkbox" id="search_inativo"
-                    name="search_inativo" value="2">
-                    <label for="search_inativo">Inativo</label>
                 </div>
 
 
@@ -144,23 +135,7 @@
                 <button id="bt_print" class="btn btn-primary" onClick="window.print()">
                     <span class="glyphicon glyphicon-print" style="color:#CA742D;font-weight:bold;" aria-hidden="true"></span>
                 </button>
-                <select name="ordem" id="ordem">
-                    <option value="nome" selected>Nome</option>
-                    <option value="DataNascimento" >Dt. Nascimento</option>
-                </select>
 
-                <div class="col-md-2" style="float:right;">
-
-                            <div class="form-group" style="float:right;margin-bottom: 0px;">
-                                <input type="number" name="n_reg" placeholder="N° Reg." class="form-control" style="float:left;width: 100px;">
-                                <span class="form-group-btn">
-                                </span>
-                            </div>
-                            <button type="submit" class="btn btn-primary" style="float:right;">
-                                <span class="glyphicon glyphicon-search" style="color:#CA742D;font-weight:bold;" aria-hidden="true"> </span>
-                            </button>
-
-                    </div>
             </form>
         </div>
 
@@ -170,23 +145,38 @@
             </div>
         @else
         <div class="panel-body panel-body-with-table">
-            <div class="table-responsive">
+
+                    @php $v_semana = -1; @endphp
+                    @foreach($Dizimistas as $dizimista)
+                        @if($v_semana != $dizimista->n_semana)
+                        @php $v_semana = $dizimista->n_semana; @endphp
+                            @if($v_semana != 0)
+                                </tbody>
+                                </table>
+                                </div>
+                             @endif
+                        <div id='semana' >
+                            {{ $dizimista->semana }}
+                        </div>
+                        <div class="table-responsive">
 
                 <table class="table table-striped ">
                     <thead>
                         <tr>
-                            <th>N°</th><th>Nome</th><th>Telefone</th><th>Dt. Nascimento</th>
-                            <th>Sexo</th><th>Situação</th><th>Bairro</th>
-                            <th>Município</th>
+                            <th style="width:100px;">Dt. Nascimento</th><th style="width:50px;">N°</th><th style="width:300px;">Nome</th><th style="width:100px;">Telefone</th>
                         </tr>
                     </thead>
                     <tbody>
-                    @foreach($Dizimistas as $dizimista)
+                       @endif
                         <tr>
-                            <td>{{ $dizimista->Numero }}</td><td>{{ $dizimista->nome }}</td><td>{{ $dizimista->Telefone1 }}</td><td>{{ date('d/m/Y', strtotime($dizimista->DataNascimento)) }}</td>
-                            <td>{{ $dizimista->Sexo }}</td><td>{{ $dizimista->codsituacaodizimista == 1 ? "Ativo" : "Inativo" }}</td>
-                            <td>{{ $dizimista->EndBairro }}</td><td>{{ $dizimista->EndMunicipio }}</td>
+                            <td>{{ date('d/m/Y', strtotime($dizimista->DataNascimento)) }}</td>
+                            <td>{{ $dizimista->Numero }}</td>
+                            <td>{{ $dizimista->nome }}</td>
+                            <td>{{ $dizimista->Telefone1 }}</td>
                         </tr>
+                        @if($v_semana != $dizimista->n_semana)
+
+                       @endif
                     @endforeach
                     </tbody>
                 </table>
@@ -194,9 +184,7 @@
             </div>
         </div>
 
-        <div class="panel-footer">
-            {!! $Dizimistas->render() !!}
-        </div>
+
 
         @endif
 

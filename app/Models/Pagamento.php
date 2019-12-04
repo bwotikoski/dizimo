@@ -23,7 +23,7 @@ class Pagamento extends Model
      */
     public function Dizimista()
     {
-        return $this->belongsTo('App\Models\Dizimista','coddizimista','coddizimista');
+        return $this->belongsTo('App\Models\Dizimista','coddizimista','coddizimista')->orderBy('nome');
     }
 
     /* ************************ ACCESSOR ************************* */

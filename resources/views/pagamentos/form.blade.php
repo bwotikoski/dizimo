@@ -2,7 +2,7 @@
 <div class="form-group ">
     <label for="Num_Diz" class="col-md-2 control-label">N° Dizimista</label>
     <div class="col-md-10">
-        <input class="form-control" name="Num_Diz" type="text" id="Num_Diz">
+        <input class="form-control" name="Num_Diz" type="text" id="Num_Diz" autofocus>
 
     </div>
 </div>
@@ -65,7 +65,7 @@
    var strDate = d.getFullYear() + "-" + (mm[1]?mm:"0"+mm[0]) + "-" + (d.getDate().toString()[1]?d.getDate().toString():"0"+d.getDate().toString()[0]);
 
    if($('#DataPagamento').val() == ''){
-        $('#DataPagamento').val(strDate);
+        $('#DataPagamento').val('2019-11-25');
    }
 
 });
@@ -85,7 +85,34 @@ window.addEventListener("load",function(){
 
                     $('#Valor').val(obj.valor);
                     $('#AnoReferencia').val(obj.ano);
-                    $('#MesReferencia').val(obj.mes);
+                    switch(obj.mes){
+                        case '01': $('#MesReferencia').val('02');
+                        break;
+                        case '02': $('#MesReferencia').val('03');
+                        break;
+                        case '03': $('#MesReferencia').val('04');
+                        break;
+                        case '04': $('#MesReferencia').val('05');
+                        break;
+                        case '05': $('#MesReferencia').val('06');
+                        break;
+                        case '06': $('#MesReferencia').val('07');
+                        break;
+                        case '07': $('#MesReferencia').val('08');
+                        break;
+                        case '08': $('#MesReferencia').val('09');
+                        break;
+                        case '09': $('#MesReferencia').val('10');
+                        break;
+                        case '10': $('#MesReferencia').val('11');
+                        break;
+                        case '11': $('#MesReferencia').val('12');
+                        break;
+                        case '12': $('#MesReferencia').val('01');
+                        break;
+
+                    }
+                    $('#incluir').focus();
                     //return obj.name;
                });
 
@@ -95,22 +122,23 @@ window.addEventListener("load",function(){
    });
 
     $('#Num_Diz').focusout(function(e) {
+        if($('#Num_Diz').val() != ''){
+            $.ajax({
+                    url: "{{ route('pagamentos.pagamento.searchajax') }}",
+                    data: {
+                            numDiz : $('#Num_Diz').val()
+                    },
+                    dataType: "json",
+                    success: function(data){
+                    var resp = $.map(data,function(obj){
+                            $('#coddizimista').val(obj.coddizimista).change();
+                            //return obj.name;
+                    });
 
-   $.ajax({
-            url: "{{ route('pagamentos.pagamento.searchajax') }}",
-            data: {
-                    numDiz : $('#Num_Diz').val()
-             },
-            dataType: "json",
-            success: function(data){
-               var resp = $.map(data,function(obj){
-                    $('#coddizimista').val(obj.coddizimista).change();
-                    //return obj.name;
-               });
-
-               //response(resp);
-            }
-            });
+                    //response(resp);
+                    }
+                    });
+        }
    });
 });
 </script>

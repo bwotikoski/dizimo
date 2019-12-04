@@ -17,7 +17,7 @@
         <link rel="stylesheet" href="{{ voyager_asset('css/app.css') }}">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
     <style>
-    .panel-footer{
+.panel-footer{
         padding-top:0px;
     }
     .table{
@@ -61,7 +61,15 @@
     border-color:rgb(77, 43, 10) !important;
     color:white !important;
 }
-
+#ordem{
+    width: 150px;
+    height: 34px;
+    padding: 6px 12px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    box-shadow: inset 0 1px 1px rgba(0,0,0,.075);
+    transition: border-color .15s ease-in-out,box-shadow .15s ease-in-out;
+}
     @media print {
         .form-control, .form-group-btn, .btn-primary, .panel-footer {
             display:none;
@@ -72,6 +80,7 @@
         }
     }
 }
+
     </style>
 
 </head>
@@ -79,51 +88,68 @@
     <div id="app">
      <main class="py-4">
     <div class="panel panel-default">
-        <div class="panel-heading clearfix" >
+        <div class="panel-heading clearfix">
             <div class="pull-left" >
                 <img src="{{ asset('/img/SFLogoCantoRel.png') }}"  style=" height: 44px;">
             </div>
-            <div class="pull-left p1" >
-                <h4 >Pagamentos</h4>
+            <div class="pull-left p1">
+                <h4 >Dizimistas</h4>
             </div>
-            <form action="/pagamentos/relatorioPagamento" method="get" style="margin-top: 5px;">
+            <form action="/dizimistas/relatorioDizimistaEmAberto" method="get" style="margin-top: 5px;">
                 <div class="col-md-2" style="float:left;">
 
-                            <div class="form-group">
-                                <input type="search" name="search_nome" placeholder="Nome" class="form-control" style="float:left;width: auto;">
-                                <span class="form-group-btn" >
-                                </span>
-                            </div>
+                        <div class="form-group">
+                            <input type="search" name="search_nome" placeholder="Nome" class="form-control" style="float:left;width: auto;">
+                            <span class="form-group-btn" >
+                            </span>
+                        </div>
 
-                    </div>
+                </div>
 
-                    <div class="col-md-2" style="float:left;">
+                <div class="col-md-1" style="float:left;">
 
-                            <div class="form-group">
-                                <input type="search" name="search_num" placeholder="N°" class="form-control" style="float:left;width: auto;">
-                                <span class="form-group-btn">
-                                </span>
-                            </div>
+                        <div class="form-group">
+                            <input type="search" name="search_num" placeholder="N°" class="form-control" style="float:left;width: 80px;">
+                            <span class="form-group-btn">
+                            </span>
+                        </div>
 
-                    </div>
+                </div>
 
-                    <div class="col-md-2" style="float:left;">
+                <div class="col-md-1" style="float:left;">
 
-                            <div class="form-group">
-                                <input type="date" name="search_dt_pag" placeholder="Dt. Pagamento" class="form-control" style="float:left;width: auto;">
-                                <span class="form-group-btn">
-                                </span>
-                            </div>
+                        <div class="form-group">
+                            <input type="search" name="search_meses" placeholder="Meses" class="form-control" style="float:left;width: 80px;">
+                            <span class="form-group-btn">
+                            </span>
+                        </div>
 
-                    </div>
-                    <button type="submit" class="btn btn-primary" >
-                        <span class="glyphicon glyphicon-search" style="color:#CA742D;font-weight:bold;" aria-hidden="true"> Filtrar</span>
-                    </button>
-                    <button id="bt_print" class="btn btn-primary" onClick="window.print()">
-                        <span class="glyphicon glyphicon-print" style="color:#CA742D;font-weight:bold;" aria-hidden="true"> Imprimir</span>
-                    </button>
+                </div>
 
-                    <div class="col-md-2" style="float:right;">
+
+                <div class="col-md-2" style="float:left; margin-top:5px;color:white;font-weight:bold !important;">
+                    <input type="checkbox" id="search_ativo"
+                    name="search_ativo" value="1">
+                    <label for="search_ativo">Ativo</label>
+
+                    <input type="checkbox" id="search_inativo"
+                    name="search_inativo" value="2">
+                    <label for="search_inativo">Inativo</label>
+                </div>
+
+
+                <button type="submit" class="btn btn-primary">
+                    <span class="glyphicon glyphicon-search" style="color:#CA742D;font-weight:bold;" aria-hidden="true"></span>
+                </button>
+                <button id="bt_print" class="btn btn-primary" onClick="window.print()">
+                    <span class="glyphicon glyphicon-print" style="color:#CA742D;font-weight:bold;" aria-hidden="true"></span>
+                </button>
+                <select name="ordem" id="ordem">
+                    <option value="nome" selected>Nome</option>
+                    <option value="DataNascimento" >Dt. Nascimento</option>
+                </select>
+
+                <div class="col-md-2" style="float:right;">
 
                             <div class="form-group" style="float:right;margin-bottom: 0px;">
                                 <input type="number" name="n_reg" placeholder="N° Reg." class="form-control" style="float:left;width: 100px;">
@@ -135,10 +161,10 @@
                             </button>
 
                     </div>
-                </form>
+            </form>
         </div>
 
-        @if(count($Pagamentos) == 0)
+        @if(count($Dizimistas) == 0)
             <div class="panel-body text-center">
                 <h4>No Dizimistas Available.</h4>
             </div>
@@ -148,25 +174,18 @@
 
                 <table class="table table-striped ">
                     <thead>
-                        <tr class="columns">
-                            <th>Dizimista</th><th>Dt. Pagamento</th><th>Valor</th><th>Mês Referência</th><th>Ano Referência</th>
+                        <tr>
+                            <th>N°</th><th>Nome</th><th>Telefone</th><th>Dt. Últ. Pagamento</th>
+                            <th>Meses Em Aberto</th>
                         </tr>
                     </thead>
                     <tbody>
-                    @foreach($Pagamentos as $pagamento)
-                        <tr >
-                            <td>{{ $pagamento->Dizimista->nome }}</td><td>{{ date('d/m/Y', strtotime($pagamento->DataPagamento)) }}</td>
-                            <td>{{ $pagamento->Valor }}</td>
-                            <td>{{ $pagamento->MesReferencia }}</td><td>{{ $pagamento->AnoReferencia }}</td>
+                    @foreach($Dizimistas as $dizimista)
+                        <tr>
+                            <td>{{ $dizimista->Numero }}</td><td>{{ $dizimista->nome }}</td><td>{{ $dizimista->Telefone1 }}</td><td>{{ $dizimista->DtUltPag }}</td>
+                            <td>{{ $dizimista->Meses }}</td>
                         </tr>
                     @endforeach
-                    <tr class="total">
-                        <td>N° Registros: {{ $CountPagamentos }}</td>
-                        <td></td>
-                        <td>R${{ number_format($TotalPagamentos, 2, ',', '.') }}</td>
-                        <td></td>
-                        <td></td>
-                    </tr>
                     </tbody>
                 </table>
 
@@ -174,7 +193,7 @@
         </div>
 
         <div class="panel-footer">
-            {!! $Pagamentos->render() !!}
+            {!! $Dizimistas->render() !!}
         </div>
 
         @endif

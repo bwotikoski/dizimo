@@ -26,8 +26,8 @@
                 <div class="col-md-2">
                     <form action="/pagamentos/search" method="get">
                         <div class="form-group">
-                            <input type="search" name="search_ano_ref" placeholder="Ano" class="form-control">
                             <input type="search" name="search_mes_ref" placeholder="Mês" class="form-control">
+                            <input type="search" name="search_ano_ref" placeholder="Ano" class="form-control">
                             <span class="form-group-btn">
                                 <button type="submit" class="btn btn-primary">
                                     <span class="glyphicon glyphicon-search" aria-hidden="true">
@@ -41,8 +41,8 @@
                 <div class="col-md-2">
                     <form action="/pagamentos/search" method="get">
                         <div class="form-group">
-                            <input type="search" name="search_ano_pag" placeholder="Ano" class="form-control">
                             <input type="search" name="search_mes_pag" placeholder="Mês" class="form-control">
+                            <input type="search" name="search_ano_pag" placeholder="Ano" class="form-control">
                             <span class="form-group-btn"><button type="submit" class="btn btn-primary">  <span class="glyphicon glyphicon-search" aria-hidden="true"></span> Pagamento</button></span>
                         </div>
                     </form>
@@ -126,6 +126,7 @@
                             </td>
                         </tr>
                     @endforeach
+
                     </tbody>
                 </table>
 
@@ -133,7 +134,7 @@
         </div>
 
         <div class="panel-footer">
-            {!! $pagamentos->render() !!}
+            {!! $pagamentos->appends($_GET)->links() !!}
         </div>
 
         @endif

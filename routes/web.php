@@ -26,6 +26,10 @@ Route::group([
     Route::get('/searchDizimista', 'ReportsController@searchDizimista');
     Route::get('/relatorioDizimista', 'ReportsController@reportDizimista')
          ->name('reports.dizimistas');
+    Route::get('/relatorioDizimistaEmAberto', 'ReportsController@reportDizimistaEmAberto')
+         ->name('reports.meses_em_aberto');
+    Route::get('/relatorioAniversariante', 'ReportsController@reportAniversariante')
+         ->name('reports.aniversariantes');
 });
 
 Route::group([
